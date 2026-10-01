@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """Procesamiento concurrente de texto mediante pipeline funcional.
 
-Este módulo implementa un pipeline concurrente basado en el patrón arquitectónico
-Pipes and Filters y descomposición funcional de tareas (Task Decomposition)
+Este módulo implementa un pipeline concurrente basado en descomposición funcional de tareas
 para el procesamiento masivo de texto.
 
 El flujo de procesamiento se descompone en cuatro etapas secuenciales desacopladas,
@@ -15,18 +14,6 @@ Etapas del pipeline:
     2. Limpiador: Eliminación de espacios en blanco iniciales y finales (strip).
     3. Convertidor: Transformación funcional del texto a mayúsculas (upper).
     4. Escritor: Persistencia continua por lotes hacia el archivo destino.
-
-Principios de optimización aplicados:
-    - Descomposición funcional desacoplada: cada tarea corre en su propio
-      intérprete y espacio de memoria, comunicándose vía canales IPC unidireccionales.
-    - Granularidad por lotes (Batching/Chunking): las líneas se transmiten en
-      bloques homogéneos (~500 líneas) para mitigar el costo de llamadas al
-      sistema y alinearse con el búfer estándar del kernel de Linux (64 KB).
-    - I/O vectorizado nativo: uso de lecturas en bloque en C (readlines con hint)
-      y escrituras agregadas (str.join) para maximizar el rendimiento del disco.
-    - Gestión estricta de descriptores IPC: cierre preventivo de descriptores
-      no utilizados en cada proceso para garantizar la propagación del centinela
-      de fin de datos (EOF) y evitar bloqueos mutuos (deadlocks).
 """
 
 from __future__ import annotations
